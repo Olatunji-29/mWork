@@ -3,16 +3,47 @@ require('dotenv').config()
 const app = express();
 const port = process.env.PORT;
 const mongoose = require('mongoose');
+const { Schema, model } = mongoose;
 const myURI = process.env.myURI
 
-mongoose.connect(myURI)
-.then(() => {
-    console.log('connected');
-    
-}).catch((err) => {
-    console.log("Error", err);
-    
+const studentSchema = new Schema({
+    name: String,
+    age: Number,
+    course: String,
+    gender: String,
+    isGraduate: Boolean
 })
+
+const studentModel = model('SQI_STUDENT', studentSchema);
+
+app.get('/test', (req, res) => {
+    const big = new studentModel({
+        name: 'Abdganiy',
+        age: 901,
+        course: 'Accounting',
+        gender: 'Male',
+    
+    })
+    big.save()
+    res.render('welcome.ejs')
+})
+
+// const student = {
+//     name: 'Abobs',
+//     age: 3,
+//     course: 'hh',
+//     gender: 'hh',
+//     isGraduate: true
+// }
+
+mongoose.connect(myURI)
+    .then(() => {
+        console.log('connected');
+
+    }).catch((err) => {
+        console.log("Error", err);
+
+    })
 
 
 
@@ -24,14 +55,14 @@ app.use(express.json());
 const allUsers = [];
 const loginUsers = [];
 app.listen(port, () => {
-    console.log({message: "Listening on port 2901"});
-    
+    console.log({ message: "Listening on port 2901" });
+
 })
 
 
-app.get('/', (req, res) =>{
+app.get('/', (req, res) => {
     const customers = ['kemi', 'dauda', 'fatai']
-    res.render('home.ejs', {customers, id: 4})
+    res.render('home.ejs', { customers, id: 4 })
 })
 
 app.get('/up', (req, res) => {
@@ -49,12 +80,12 @@ app.get('/in', (req, res) => {
     res.render('login.ejs')
 })
 
-app.post('/login', (req, res)=>{
+app.post('/login', (req, res) => {
     const lUser = req.body
     loginUsers.push(lUser)
     console.log("Login Users:", loginUsers);
     res.redirect('/')
-    
+
 
 })
 
